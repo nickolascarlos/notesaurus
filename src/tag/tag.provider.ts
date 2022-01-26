@@ -1,5 +1,6 @@
 import { Connection } from 'typeorm';
-import { Tag } from './entities/tag.entity';
+
+import Tag from './entities/tag.entity';
 
 export default {
   provide: 'TAG_REPOSITORY',

@@ -1,5 +1,6 @@
 import { Connection } from 'typeorm';
-import { File } from './entities/file.entity';
+
+import File from './entities/file.entity';
 
 export default {
   provide: 'FILE_REPOSITORY',
