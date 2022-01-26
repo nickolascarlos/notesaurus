@@ -1,4 +1,4 @@
-import { Inject, Injectable, Module } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 
 import { CreateNoteDto } from './dto/create-note.dto';
