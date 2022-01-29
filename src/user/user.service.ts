@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, UsePipes, ValidationPipe } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import * as crypto from 'crypto';
 
@@ -13,7 +13,8 @@ export class UserService {
     @Inject('USER_REPOSITORY')
     private readonly userRepository: Repository<User>,
   ) {}
-
+  
+  @UsePipes(ValidationPipe)
   async create(payload: CreateUserDto) {
     if ((await this.userRepository.find({ email: payload.email })).length > 0)
       throw new ConflictException('Email is already in use');
@@ -42,8 +43,8 @@ export class UserService {
     return `This action returns all user`;
   }
 
-  async findOne(id: string) {
-    return await this.userRepository.findOne({
+  findOne(id: string): Promise<User> {
+    return this.userRepository.findOne({
       where: {
         id
       }
