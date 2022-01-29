@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import * as crypto from 'crypto';
 
@@ -16,10 +16,10 @@ export class UserService {
 
   async create(payload: CreateUserDto) {
     if ((await this.userRepository.find({ email: payload.email })).length > 0)
-      throw new HttpException('Email is already in use', HttpStatus.CONFLICT);
+      throw new ConflictException('Email is already in use');
     
     if ((await this.userRepository.find({ username: payload.username })).length > 0)
-      throw new HttpException('Username is already in use', HttpStatus.CONFLICT);
+      throw new ConflictException('Username is already in use');
 
     const newUser: User = new User();
 
@@ -43,7 +43,7 @@ export class UserService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} user`;
+
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
