@@ -1,5 +1,7 @@
-import { Inject, Injectable } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
+import * as crypto from 'crypto';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -12,8 +14,28 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(payload: CreateUserDto) {
+    if ((await this.userRepository.find({ email: payload.email })).length > 0)
+      throw new HttpException('Email is already in use', HttpStatus.CONFLICT);
+    
+    if ((await this.userRepository.find({ username: payload.username })).length > 0)
+      throw new HttpException('Username is already in use', HttpStatus.CONFLICT);
+
+    const newUser: User = new User();
+
+    Object.assign(newUser, {
+      ...payload,
+      password: crypto
+        .createHash('sha256')
+        .update(payload.password)
+        .digest('hex'),
+    });
+
+    await newUser.save();
+
+    delete newUser.password
+
+    return newUser;
   }
 
   findAll() {
