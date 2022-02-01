@@ -6,8 +6,11 @@ import {
   MaxLength,
   IsUUID,
   IsOptional,
+  Validate,
+  IsISO8601,
   IsDateString,
 } from 'class-validator';
+import AtLeastXYearsAgo from 'src/validators/AtLeastXYearsAgo.validator';
 
 export class CreateUserDto {
   @IsString()
@@ -51,6 +54,6 @@ export class CreateUserDto {
 
   @IsDateString()
   @IsNotEmpty()
-  // TODO: Implement verification to assure the age is at least 12
-  birthday: Date;
+  @Validate(AtLeastXYearsAgo, [12])
+  birthday;
 }
