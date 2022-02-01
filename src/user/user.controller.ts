@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
+  ValidationPipe,
+  UsePipes,
 } from '@nestjs/common';
 
 import { UserService } from './user.service';
@@ -18,6 +20,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
+  @UsePipes(new ValidationPipe())
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }

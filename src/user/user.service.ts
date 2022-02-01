@@ -14,7 +14,7 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
   
-  @UsePipes(ValidationPipe)
+  @UsePipes(new ValidationPipe())
   async create(payload: CreateUserDto) {
     if ((await this.userRepository.find({ email: payload.email })).length > 0)
       throw new ConflictException('Email is already in use');
